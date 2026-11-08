@@ -1,9 +1,25 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Multi-tenant isolation: a signed-in user can access only their own UID subtree.
+    function isSuperAdmin() {
+      return request.auth != null && request.auth.uid == "C0RNDbW7oHTWNdyBFh6O2TOQxUm2";
+    }
+    function hasActiveSubscription(uid) {
+      let p = /databases/$(database)/documents/subscriptions/$(uid);
+      return exists(p)
+        && get(p).data.status == "active"
+        && get(p).data.expiresAt > request.time;
+    }
+    // Subscription records are server-managed only. Never allow browser writes.
+    match /subscriptions/{uid} {
+      allow read, write: if false;
+    }
+    // Each customer can access only their own records while subscription is active.
+    // Super Admin bypass is limited to the owner account.
     match /users/{userId}/{document=**} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read, write: if request.auth != null
+        && request.auth.uid == userId
+        && (isSuperAdmin() || hasActiveSubscription(userId));
     }
   }
 }

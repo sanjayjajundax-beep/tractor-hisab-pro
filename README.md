@@ -53,3 +53,15 @@
 
 ## Production testing
 दो अलग test accounts बनाकर दोनों में अलग-अलग tractor/farmer/work data डालें और पुष्टि करें कि account A में account B का data नहीं दिखता। Rules को कभी public न करें। नियमित JSON backup रखें।
+
+
+## Subscription system (Cloudflare Worker + Firestore)
+1. Deploy `worker.js` to the existing Cloudflare Worker `tractor-hisab-pro-api`.
+2. Keep existing variables/secrets: `FIREBASE_API_KEY`, `FIREBASE_PROJECT_ID`, `SUPER_ADMIN_UID`, `ALLOWED_ORIGIN`, and `FIREBASE_SERVICE_ACCOUNT_JSON`. The JSON secret must be the service-account JSON for this same Firebase/Google Cloud project.
+3. In Google Cloud, the service account needs permission to access Firestore (Firebase Admin SDK Administrator is sufficient for this starter).
+4. Publish the included `firestore.rules` in Firebase Console > Firestore Database > Rules. This is required for expiry enforcement. The rules allow only each UID's own `/users/{uid}/...` records while its server-managed subscription is active; subscription documents are server-only.
+5. Deploy the updated website files to Cloudflare Pages. Set `API_BASE` in `app.js` only if the Worker URL changes.
+6. New users receive a 15-day trial when they first log in after this version is deployed. Existing users without a subscription also receive a 15-day trial on their first login after deployment. Existing records are not deleted.
+7. Super Admin signs in with the configured UID. In Settings > Customer Subscription Management, enter a customer's Firebase Authentication UID and choose 365 days, 730 days, 30 days, or a custom duration (1–1095 days).
+
+Important: publish Firestore Rules before using the updated site. Otherwise the Worker may create a trial record but the app's data reads will be denied. Test with a separate customer account first. Keep the service-account JSON only in Cloudflare Secret storage; never commit it to GitHub or put it in frontend files. This starter implements manual subscription grants, not online payment collection or automatic payment verification.
