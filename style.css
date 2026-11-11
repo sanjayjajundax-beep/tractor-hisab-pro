@@ -8,5 +8,6 @@
 
 .subscription-card{width:min(100%,560px)}.plan-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:18px 0;text-align:center}.plan-card{position:relative;border:1px solid #dce5df;border-radius:12px;padding:13px 9px;display:grid;gap:7px;align-content:start}.plan-card strong{font-size:27px;color:#145b39}.plan-card small{color:#718078}.plan-card b{font-size:14px}.plan-card.featured{border:2px solid #23834e;background:#f2fbf5}.plan-card>span{font-size:10px;color:#17663a;font-weight:800}.plan-card button{font-size:12px;padding:8px 4px}@media(max-width:480px){.plan-grid{gap:6px}.plan-card{padding:10px 5px}.plan-card strong{font-size:23px}.plan-card b{font-size:12px}.plan-card button{font-size:10px}}
 
-/* मेरी खेती मॉड्यूल */
-.farm-field-card{border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0;background:#fbfdfb}.farm-field-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.farm-field-head h3{margin:0 0 4px;color:var(--d)}.farm-field-head p{margin:5px 0}.farm-field-card table{margin-top:10px}.farm-field-card small{color:var(--muted)}#farmStats{grid-template-columns:repeat(3,1fr)}#farmReport,#farmActivitiesTable,#farmSalesTable{overflow-x:auto}@media(max-width:760px){#farmStats{grid-template-columns:repeat(2,1fr)}.farm-field-head{align-items:flex-start}}@media print{body:has(#myfarm.active) .page{display:none!important}body:has(#myfarm.active) #myfarm{display:block!important}body:has(#myfarm.active) .farm-field-card{break-inside:avoid}}
+/* Authentication screen: create ID first, then use the same panel to log in */
+#authMsg{line-height:1.6;margin:10px 0;overflow-wrap:anywhere}
+#authForm .btn{min-height:46px}
